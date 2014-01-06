@@ -29,6 +29,10 @@ var pipedContext = function(css, options, context) {
   return context;
 };
 
+var unixOnlyContext = function(context) {
+  return isWindows ? {} : context;
+};
+
 var readFile = function(filename) {
   return fs.readFileSync(filename, 'utf-8').replace(lineBreak, '');
 };
@@ -231,7 +235,7 @@ exports.commandsSuite = vows.describe('binary commands').addBatch({
       }
     })
   },
-  'timeout': {
+  'timeout': unixOnlyContext({
     topic: function() {
       var self = this;
       var source = '@import url(http://localhost:24682/timeout.css);';
@@ -252,5 +256,5 @@ exports.commandsSuite = vows.describe('binary commands').addBatch({
     teardown: function() {
       this.server.close();
     }
-  }
+  })
 });
